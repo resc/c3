@@ -53,6 +53,22 @@ Thread And Goroutine Safety
 
 These containers are _not_ goroutine- or thread safe.
 
+There is a basic check for concurrent modification while iterating over a container
+so you'll at least know when things get corrupted because of concurrent modifications
+Every mutation of a container increments the container version, and Iterator checks
+this version on every MoveNext(), and panics if it is not what it expects.
+
+This also means you cannot modify a container while iterating over it.
+
+Example:
+
+	// Don't do this!
+	l := c3.ListOf(1,2,3,4)
+	for i := l.Iterator(); i.MoveNext(); {
+		// vv bug here, cannot modify container while iterating over it! vv
+		l.Add(i.Value().(int)*2)
+	}
+
 Element Types
 =============
 
