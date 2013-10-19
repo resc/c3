@@ -8,6 +8,14 @@ func NewStack() Stack {
 	return &stack{newList()}
 }
 
+func StackOf(items ...interface{}) Stack {
+	s := NewStack()
+	for item := range items {
+		s.Push(item)
+	}
+	return s
+}
+
 func (s *stack) Peek() (interface{}, bool) {
 	return s.Last()
 }

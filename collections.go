@@ -158,7 +158,7 @@ type Consumable interface {
 
 // A simple queuing container.
 type Queue interface {
-	ReadOnlyList
+	ReadOnlyBag
 	Peeker
 	Consumable
 	// Appends an item at the tail of the queue,
@@ -173,7 +173,7 @@ type Queue interface {
 
 // A simple stack container
 type Stack interface {
-	ReadOnlyList
+	ReadOnlyBag
 	Peeker
 	Consumable
 	// Adds an item at the top of the stack,
