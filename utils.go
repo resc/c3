@@ -3,7 +3,7 @@ package c3
 // Makes a slice of the items in an Iterable
 func ToSlice(c Iterable) []interface{} {
 	var slice []interface{}
-	if col, ok := c.(ReadOnlyCollection); ok {
+	if col, ok := c.(ReadOnlyBag); ok {
 		slice = make([]interface{}, 0, col.Len())
 	} else {
 		slice = make([]interface{}, 0, 4)

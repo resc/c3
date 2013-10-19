@@ -45,9 +45,9 @@ type Comparable interface {
 }
 */
 
-// ReadOnlyCollection provides a length and a test for
+// ReadOnlyBag provides a length and a test for
 // determining if an item is present in a container
-type ReadOnlyCollection interface {
+type ReadOnlyBag interface {
 	Iterable
 	// Returns the item count
 	Len() int
@@ -82,13 +82,13 @@ type Indexable interface {
 
 // ReadOnlyList is an indexable readonly list
 type ReadOnlyList interface {
-	ReadOnlyCollection
+	ReadOnlyBag
 	Indexable
 }
 
-// Collection is an unordered mutable container
-type Collection interface {
-	ReadOnlyCollection
+// Bag is an unordered mutable container
+type Bag interface {
+	ReadOnlyBag
 	// Add adds an item to the container,
 	// returns true if the container was modified,
 	// false if it was not modified
@@ -100,7 +100,7 @@ type Collection interface {
 }
 
 type List interface {
-	Collection
+	Bag
 	Indexable
 	// Inserts the item at the given index,
 	// returns true if the container was modified,
@@ -115,7 +115,7 @@ type List interface {
 // A set type with basic set operations.
 // See also http://en.wikipedia.org/wiki/Set_theory
 type Set interface {
-	Collection
+	Bag
 	// Union computes the union of the set.
 	// i.e. all items in this set and the other set, without duplicates
 	Union(other Set) Set

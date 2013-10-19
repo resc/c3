@@ -56,7 +56,7 @@ func TestContains(t *testing.T) {
 }
 
 func TestContainsFail(t *testing.T) {
-	l := CollectionOf(1, 2, 3)
+	l := BagOf(1, 2, 3)
 
 	if !l.Contains(2) {
 		t.Errorf("Contains(...): expected %v, got %v", false, ToSlice(l))
@@ -160,7 +160,7 @@ func TestIndexOfFail(t *testing.T) {
 	}
 }
 
-func assertContains(t *testing.T, l ReadOnlyCollection, item interface{}, expected bool) {
+func assertContains(t *testing.T, l ReadOnlyBag, item interface{}, expected bool) {
 	result := l.Contains(item)
 	if expected != result {
 		t.Errorf("Contains(%v): expected %v, got %v", item, expected, result)

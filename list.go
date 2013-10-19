@@ -14,7 +14,7 @@ func WrapList(items []interface{}) List {
 }
 
 // Creates a new, empty Collection
-func NewCollection() Collection {
+func NewBag() Bag {
 	return NewList()
 }
 
@@ -34,7 +34,7 @@ func IterableOf(items ...interface{}) Iterable {
 }
 
 // Creates a collection with the given items.
-func ReadOnlyCollectionOf(items ...interface{}) ReadOnlyCollection {
+func ReadOnlyBagOf(items ...interface{}) ReadOnlyBag {
 	return ListOf(items...)
 }
 
@@ -44,7 +44,7 @@ func ReadOnlyListOf(items ...interface{}) ReadOnlyList {
 }
 
 // Creates a collection with the given items.
-func CollectionOf(items ...interface{}) Collection {
+func BagOf(items ...interface{}) Bag {
 	return ListOf(items...)
 }
 
