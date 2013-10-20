@@ -48,45 +48,40 @@ func BagOf(items ...interface{}) Bag {
 	return ListOf(items...)
 }
 
+func (l *list) Iterator() Iterator {
+	return &listiter{l, l.version, -1, nil}
+}
+
 type listiter struct {
+	l       *list
 	version int
 	index   int
-	l       *list
+	value   interface{}
 }
 
 func (i *listiter) MoveNext() bool {
 	if i.version != i.l.version {
+		i.value = nil
 		panic("Concurrent modification detected")
 	}
 
-	if i.index < len(i.l.items) {
+	if i.index < len(i.l.items)-1 {
 		i.index++
+		i.value = i.l.items[i.index]
+		return true
 	}
 
-	return i.index < len(i.l.items)
+	i.value = nil
+	return false
 }
 
 func (i *listiter) Value() interface{} {
-	l := i.l
-	index := i.index
-	if i.version != l.version {
-		panic("Concurrent modification detected")
-	}
-
-	if 0 > index || index >= l.Len() {
-		return nil
-	}
-
-	return l.items[index]
+	return i.value
 }
 
 type list struct {
 	version int
 	items   []interface{}
-}
-
-func (l *list) Iterator() Iterator {
-	return &listiter{l.version, -1, l}
 }
 
 func (l *list) Add(item interface{}) bool {

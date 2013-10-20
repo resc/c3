@@ -1,5 +1,22 @@
 package c3
 
+var (
+	// An empty Iterable
+	EmptyIterable Iterable = &nilIterable{}
+	// An empty Iterator.
+	EmptyIterator Iterator = &nilIterator{}
+)
+
+type nilIterable struct{}
+
+func (x *nilIterable) Iterator() Iterator { return EmptyIterator }
+
+type nilIterator struct{}
+
+func (x *nilIterator) MoveNext() bool { return false }
+
+func (x *nilIterator) Value() interface{} { return nil }
+
 // Makes a slice of the items in an Iterable
 func ToSlice(c Iterable) []interface{} {
 	var slice []interface{}
@@ -79,10 +96,10 @@ func (i *genIterator) MoveNext() bool {
 	if ok {
 		i.value = value
 		return true
-	} else {
-		i.value = nil
-		return false
 	}
+
+	i.value = nil
+	return false
 }
 
 func (i *genIterator) Value() interface{} {

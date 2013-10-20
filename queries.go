@@ -12,23 +12,6 @@ func Query(items Iterable) *Q {
 	return &Q{items}
 }
 
-var (
-	// An empty Iterable
-	EmptyIterable Iterable = &nilIterable{}
-	// An empty Iterator.
-	EmptyIterator Iterator = &nilIterator{}
-)
-
-type nilIterable struct{}
-
-func (x *nilIterable) Iterator() Iterator { return EmptyIterator }
-
-type nilIterator struct{}
-
-func (x *nilIterator) MoveNext() bool { return false }
-
-func (x *nilIterator) Value() interface{} { return nil }
-
 // The c3 query representation
 type Q struct {
 	items Iterable

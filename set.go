@@ -44,6 +44,7 @@ func (s *set) Len() int {
 
 func (s *set) Iterator() Iterator {
 	// TODO optimize this, it's horrible...
+	// TODO check version.
 	var items = make([]interface{}, 0, s.Len())
 	for k, _ := range s.items {
 		items = append(items, k)

@@ -5,9 +5,9 @@ import (
 )
 
 func TestPopFromEmptyStack(t *testing.T) {
-	l := NewStack()
+	s := NewStack()
 
-	item, ok := l.Pop()
+	item, ok := s.Pop()
 	if ok || item != nil {
 		t.Errorf("Expected nil,false got %v,%v", item, ok)
 	}

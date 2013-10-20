@@ -105,6 +105,7 @@ Example:
 	func isMod2(e interface{}) bool {
 		return e.(int)%2 == 0
 	} 
+	
 	func times10(e interface{}) interface{} {
 		return e.(int)*10
 	} 
