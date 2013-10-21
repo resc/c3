@@ -14,19 +14,19 @@ func Query(items Iterable) *Q {
 
 // The c3 query representation
 type Q struct {
-	items Iterable
+	result Iterable
 }
 
 // Iterator provides an iterator for the query results.
 func (q *Q) Iterator() Iterator {
-	return q.items.Iterator()
+	return q.result.Iterator()
 }
 
 // Action is invoked for every item in the query result.
 type Action func(interface{})
 
-// Do applies the action to every item in the query result.
-func (q *Q) Do(action Action) {
+// For applies the action to every item in the query result.
+func (q *Q) For(action Action) {
 	For(q, action)
 }
 
@@ -190,7 +190,7 @@ func (q *Q) Skip(count int) *Q {
 // If filter returns true, the item is included
 // in the result, otherwise it is skipped.
 func (q *Q) Where(filter Predicate) *Q {
-	return &Q{&whereIterable{q.items, filter}}
+	return &Q{&whereIterable{q.result, filter}}
 }
 
 type whereIterable struct {
@@ -226,7 +226,7 @@ type ManySelector func(interface{}) Iterable
 // SelectMany uses the selector to create an Iterator for each
 // item, and concatenates all the results in a single flat result set.
 func (q *Q) SelectMany(selector ManySelector) *Q {
-	return &Q{&selectManyIterable{q.items, selector}}
+	return &Q{&selectManyIterable{q.result, selector}}
 }
 
 type selectManyIterable struct {
@@ -278,7 +278,7 @@ type Selector func(interface{}) interface{}
 
 // Select uses the selector to create a new result for each item.
 func (q *Q) Select(selector Selector) *Q {
-	return &Q{&selectIterable{q.items, selector}}
+	return &Q{&selectIterable{q.result, selector}}
 }
 
 type selectIterable struct {
