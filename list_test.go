@@ -6,17 +6,12 @@ import (
 
 func TestAdd(t *testing.T) {
 	l := NewList()
-
-	if !l.Add(1) || l.Len() != 1 {
-		t.Errorf("Len(): expected %v, got %v", 1, l.Len())
-	}
+	assert(t, 0, l.Len(), "for Len()")
 }
 func TestAddNil(t *testing.T) {
 	l := ListOf(nil, nil, nil)
 
-	if l.Len() != 3 {
-		t.Errorf("Len(): expected %v, got %v", 3, l.Len())
-	}
+	assert(t, 3, l.Len(), "l.Len()")
 	assertContains(t, l, nil, true)
 }
 
@@ -26,14 +21,13 @@ func TestIndexOfNil(t *testing.T) {
 	assertIndexOf(t, l, nil, 0)
 
 	index, ok := l.LastIndexOf(nil)
-	if !ok || index != 2 {
-		t.Error("Expected %v,got%v", 2, index)
-	}
+	assert(t, true, ok, "ok")
+	assert(t, 2, index, "index")
 
 	index, ok = l.NextIndexOf(0, nil)
-	if !ok || index != 1 {
-		t.Error("Expected %v,got%v", 1, index)
-	}
+	assert(t, true, ok, "ok")
+	assert(t, 1, index, "index")
+
 }
 
 func TestListOf(t *testing.T) {
@@ -57,10 +51,11 @@ func TestContains(t *testing.T) {
 
 func TestContainsFail(t *testing.T) {
 	l := BagOf(1, 2, 3)
-
-	if !l.Contains(2) {
-		t.Errorf("Contains(...): expected %v, got %v", false, ToSlice(l))
-	}
+	assert(t, false, l.Contains(0), "l.Contains(0)")
+	assert(t, true, l.Contains(1), "l.Contains(1)")
+	assert(t, true, l.Contains(2), "l.Contains(2)")
+	assert(t, true, l.Contains(3), "l.Contains(3)")
+	assert(t, false, l.Contains(4), "l.Contains(4)")
 }
 
 func TestIndexOf(t *testing.T) {
@@ -157,19 +152,5 @@ func TestIndexOfFail(t *testing.T) {
 	added := l.Add(1) && l.Add(1)
 	if index, ok := l.IndexOf(2); !added || ok || index >= 0 {
 		t.Errorf("IndexOf(...): expected %v,%v got %v,%v", 1, true, index, ok)
-	}
-}
-
-func assertContains(t *testing.T, l ReadOnlyBag, item interface{}, expected bool) {
-	result := l.Contains(item)
-	if expected != result {
-		t.Errorf("Contains(%v): expected %v, got %v", item, expected, result)
-	}
-}
-
-func assertIndexOf(t *testing.T, l ReadOnlyList, item interface{}, expected int) {
-	result, ok := l.IndexOf(item)
-	if !ok || expected != result {
-		t.Errorf("IndexOf(%v): expected %v,%v got %v,%v", item, expected, true, result, ok)
 	}
 }

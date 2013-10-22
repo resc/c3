@@ -1,19 +1,27 @@
 package c3
 
 func NewQueue() Queue {
-	return &queue{0, 0, nil, nil}
+	return &queue{nil, nil, 0, 0}
+}
+
+func QueueOf(items ...interface{}) Queue {
+	q := NewQueue()
+	for item := range items {
+		q.Enqueue(item)
+	}
+	return q
 }
 
 type queue struct {
-	version int
-	length  int
 	head    *entry
 	tail    *entry
+	version int
+	length  int
 }
 
 type entry struct {
-	value interface{}
-	next  *entry
+	item interface{}
+	next *entry
 }
 
 func (q *queue) Len() int {
@@ -22,7 +30,7 @@ func (q *queue) Len() int {
 
 func (q *queue) Contains(item interface{}) bool {
 	for e := q.head; e != nil; e = e.next {
-		if e.value == item {
+		if e.item == item {
 			return true
 		}
 	}
@@ -31,7 +39,7 @@ func (q *queue) Contains(item interface{}) bool {
 
 func (q *queue) Peek() (interface{}, bool) {
 	if q.head != nil {
-		return q.head.value, true
+		return q.head.item, true
 	}
 	return nil, false
 }
@@ -45,7 +53,7 @@ func (q *queue) Dequeue() (interface{}, bool) {
 		}
 		q.length--
 		q.version++
-		return e.value, true
+		return e.item, true
 	}
 	return nil, false
 }
@@ -89,7 +97,7 @@ func (i *qiterator) Value() interface{} {
 	if i.e == nil {
 		return nil
 	}
-	return i.e.value
+	return i.e.item
 }
 
 func (q *queue) Consumer() Consumer {
@@ -97,16 +105,16 @@ func (q *queue) Consumer() Consumer {
 }
 
 type qconsumer struct {
-	q     *queue
-	value interface{}
+	q    *queue
+	item interface{}
 }
 
-func (qc *qconsumer) MoveNext() bool {
-	value, ok := qc.q.Dequeue()
-	qc.value = value
+func (c *qconsumer) MoveNext() bool {
+	item, ok := c.q.Dequeue()
+	c.item = item
 	return ok
 }
 
-func (qc *qconsumer) Value() interface{} {
-	return qc.value
+func (c *qconsumer) Value() interface{} {
+	return c.item
 }
