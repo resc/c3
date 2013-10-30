@@ -5,9 +5,9 @@
 //		- Iterable: a container that allow iterating over its items.
 //		- Bag: an unordered container that allows duplicate items.
 //		- Set: an unordered container that does not allow duplicate items.
-//		- List: an indexable container items.
-//		- Queue: an fifo container.
-//		- Stack: an lifo container.
+//		- List: an indexable container.
+//		- Queue: a fifo container.
+//		- Stack: a lifo container.
 //
 // It also provides a query api for those containers that looks like C#'s Linq
 package c3
