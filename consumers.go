@@ -1,21 +1,11 @@
 package c3
 
-// WrapConsumable wraps a channel in a Consumable
-func WrapConsumable(c <-chan interface{}) Consumable {
-	return &consumable{c}
-}
-
 type consumable struct {
 	c <-chan interface{}
 }
 
 func (c *consumable) Consumer() Consumer {
 	return WrapConsumer(c.c)
-}
-
-// WrapConsumer wraps a channel in a consuming Iterator
-func WrapConsumer(c <-chan interface{}) Consumer {
-	return &consumer{c, false, nil}
 }
 
 type consumer struct {

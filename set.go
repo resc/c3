@@ -1,21 +1,8 @@
 package c3
 
-// NewSet creates a new, empty Set
-func NewSet() Set {
-	return &set{make(map[interface{}]bool)}
-}
-
-// SetOf creates a new Set containing the unique items
-func SetOf(items ...interface{}) Set {
-	set := NewSet()
-	for item := range items {
-		set.Add(item)
-	}
-	return set
-}
-
 type set struct {
-	items map[interface{}]bool
+	version int
+	items   map[interface{}]bool
 }
 
 func (s *set) Add(item interface{}) bool {
@@ -23,6 +10,7 @@ func (s *set) Add(item interface{}) bool {
 		return false
 	}
 	s.items[item] = true
+	s.version++
 	return true
 }
 
@@ -33,6 +21,7 @@ func (s *set) Contains(item interface{}) bool {
 func (s *set) Delete(item interface{}) bool {
 	if s.Contains(item) {
 		delete(s.items, item)
+		s.version++
 		return true
 	}
 	return false
@@ -44,17 +33,21 @@ func (s *set) Len() int {
 
 func (s *set) Iterator() Iterator {
 	// TODO optimize this, it's horrible...
-	// TODO check version.
-	var items = make([]interface{}, 0, s.Len())
-	for k, _ := range s.items {
-		items = append(items, k)
-	}
-	return ToIterable(func() Generate {
+	return MakeIterable(func() Generate {
+		var items = make([]interface{}, 0, s.Len())
+		for k, _ := range s.items {
+			items = append(items, k)
+		}
 		iter := items[:]
+		version := s.version
 		return func() (interface{}, bool) {
+			if s.version != version {
+				panic("Concurrent modification detected")
+			}
 			if len(iter) == 0 {
 				return nil, false
 			}
+
 			item := iter[0]
 			iter = iter[1:]
 			return item, true

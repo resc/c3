@@ -2,14 +2,24 @@ package c3
 
 var (
 	// An empty Iterable
-	EmptyIterable Iterable = &nilIterable{}
+	emptyIterable Iterable = &nilIterable{}
 	// An empty Iterator.
-	EmptyIterator Iterator = &nilIterator{}
+	emptyIterator Iterator = &nilIterator{}
 )
+
+func EmptyIterable() Iterable {
+	return emptyIterable
+}
+
+func EmptyIterator() Iterator {
+	return emptyIterator
+}
 
 type nilIterable struct{}
 
-func (x *nilIterable) Iterator() Iterator { return EmptyIterator }
+func (x *nilIterable) Iterator() Iterator {
+	return emptyIterator
+}
 
 type nilIterator struct{}
 
@@ -17,7 +27,7 @@ func (x *nilIterator) MoveNext() bool { return false }
 
 func (x *nilIterator) Value() interface{} { return nil }
 
-// Makes a slice of the items in an Iterable
+// ToSlice makes a new slice of the items in an Iterable
 func ToSlice(c Iterable) []interface{} {
 	var slice []interface{}
 	if col, ok := c.(ReadOnlyBag); ok {
@@ -31,7 +41,43 @@ func ToSlice(c Iterable) []interface{} {
 	return slice
 }
 
-// Makes a set of the unique items in an Iterable
+// ToList creates a new List of the items in an Iterable
+func ToList(c Iterable) List {
+	l := NewList()
+	for i := c.Iterator(); i.MoveNext(); {
+		l.Add(i.Value())
+	}
+	return l
+}
+
+// ToReadOnlyList creates a new ReadOnlyList of the items in an Iterable
+func ToReadOnlyList(c Iterable) ReadOnlyList {
+	l := NewList()
+	for i := c.Iterator(); i.MoveNext(); {
+		l.Add(i.Value())
+	}
+	return l
+}
+
+// ToBag creates a new Bag of the items in an Iterable
+func ToBag(c Iterable) Bag {
+	l := NewList()
+	for i := c.Iterator(); i.MoveNext(); {
+		l.Add(i.Value())
+	}
+	return l
+}
+
+// ToReadOnlyBag creates a new ReadOnlyBag of the items in an Iterable
+func ToReadOnlyBag(c Iterable) ReadOnlyBag {
+	l := NewList()
+	for i := c.Iterator(); i.MoveNext(); {
+		l.Add(i.Value())
+	}
+	return l
+}
+
+// ToSet makes a new Set of the unique items in an Iterable
 func ToSet(c Iterable) Set {
 	set := NewSet()
 	for i := c.Iterator(); i.MoveNext(); {
@@ -40,16 +86,34 @@ func ToSet(c Iterable) Set {
 	return set
 }
 
-// Applies the action to each item in the Iterable
-func For(c Iterable, action func(interface{})) {
+// ToStack makes a new Stack of the items in an Iterable
+func ToStack(c Iterable) Stack {
+	s := NewStack()
+	for i := c.Iterator(); i.MoveNext(); {
+		s.Push(i.Value())
+	}
+	return s
+}
+
+// ToQueue makes a new Queue of the items in an Iterable
+func ToQueue(c Iterable) Queue {
+	s := NewQueue()
+	for i := c.Iterator(); i.MoveNext(); {
+		s.Enqueue(i.Value())
+	}
+	return s
+}
+
+// For applies the action to each item in the Iterable
+func For(c Iterable, action Action) {
 	for i := c.Iterator(); i.MoveNext(); {
 		action(i.Value())
 	}
 }
 
-//  Applies the action to each item in the Iterable
+//  Go applies the action to each item in the Iterable
 //  on a separate goroutine using an unbuffered channel
-func Go(c Iterable, action func(interface{})) {
+func Go(c Iterable, action Action) {
 	ch := make(chan interface{})
 	defer close(ch)
 	go func() {
@@ -60,50 +124,17 @@ func Go(c Iterable, action func(interface{})) {
 	For(c, func(value interface{}) { ch <- value })
 }
 
-// Applies the action to each item in the Iterable
+// GoBuffered applies the action to each item in the Iterable
 // on a separate goroutine using a buffered channel
-func GoBuffered(c Iterable, bufferSize int, f func(interface{})) {
+func GoBuffered(c Iterable, bufferSize int, action Action) {
 	ch := make(chan interface{}, bufferSize)
 	defer close(ch)
 	go func() {
 		for value := range ch {
-			f(value)
+			action(value)
 		}
 	}()
 	For(c, func(value interface{}) { ch <- value })
-}
-
-// Converts the Generator function into an Iterable
-func ToIterable(g Generator) Iterable {
-	return &genIterable{g}
-}
-
-type genIterable struct {
-	g Generator
-}
-
-func (i *genIterable) Iterator() Iterator {
-	return &genIterator{i.g(), nil}
-}
-
-type genIterator struct {
-	g     Generate
-	value interface{}
-}
-
-func (i *genIterator) MoveNext() bool {
-	value, ok := i.g()
-	if ok {
-		i.value = value
-		return true
-	}
-
-	i.value = nil
-	return false
-}
-
-func (i *genIterator) Value() interface{} {
-	return i.value
 }
 
 // Repeat repeats the item count times.
@@ -115,9 +146,9 @@ func Repeat(count int, item interface{}) Iterable {
 		panic("Count parameter invalid")
 	}
 	if count == 0 {
-		return EmptyIterable
+		return emptyIterable
 	}
-	return ToIterable(func() Generate {
+	return MakeIterable(func() Generate {
 		x := 0
 		return func() (interface{}, bool) {
 			if x == count {
@@ -129,7 +160,7 @@ func Repeat(count int, item interface{}) Iterable {
 	})
 }
 
-// Creates a range iterable that iterates over the ints from start to end inclusive.
+// Range creates a range iterable that iterates over the ints from start to end inclusive.
 //
 // e.g.:
 //		 Range(0,9) // returns [0,1,2,3,4,5,6,7,8,9]
@@ -139,7 +170,7 @@ func Range(start, end int) Iterable {
 	if end < start {
 		inc = -1
 	}
-	return ToIterable(func() Generate {
+	return MakeIterable(func() Generate {
 		x := start - inc
 		y := end
 		return func() (interface{}, bool) {
@@ -150,4 +181,20 @@ func Range(start, end int) Iterable {
 			return x, true
 		}
 	})
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	} else {
+		return b
+	}
+}
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	} else {
+		return b
+	}
 }

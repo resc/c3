@@ -1,17 +1,5 @@
 package c3
 
-func NewQueue() Queue {
-	return &queue{nil, nil, 0, 0}
-}
-
-func QueueOf(items ...interface{}) Queue {
-	q := NewQueue()
-	for item := range items {
-		q.Enqueue(item)
-	}
-	return q
-}
-
 type queue struct {
 	head    *entry
 	tail    *entry
@@ -73,48 +61,9 @@ func (q *queue) Enqueue(item interface{}) bool {
 }
 
 func (q *queue) Iterator() Iterator {
-	return &qiterator{q, q.head, q.version}
-}
-
-type qiterator struct {
-	q       *queue
-	e       *entry
-	version int
-}
-
-func (i *qiterator) MoveNext() bool {
-	if i.version != i.q.version {
-		panic("Concurrent modification detected.")
-	}
-	if i.e == nil {
-		return false
-	}
-	i.e = i.e.next
-	return i.e != nil
-}
-
-func (i *qiterator) Value() interface{} {
-	if i.e == nil {
-		return nil
-	}
-	return i.e.item
+	return &queueIterator{q, q.head, q.version}
 }
 
 func (q *queue) Consumer() Consumer {
-	return &qconsumer{q, nil}
-}
-
-type qconsumer struct {
-	q    *queue
-	item interface{}
-}
-
-func (c *qconsumer) MoveNext() bool {
-	item, ok := c.q.Dequeue()
-	c.item = item
-	return ok
-}
-
-func (c *qconsumer) Value() interface{} {
-	return c.item
+	return &queueConsumer{q, nil}
 }

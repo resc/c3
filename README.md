@@ -32,10 +32,14 @@ you could submit it as a pull request with a failing test.
 Road Map
 ========
 
-The interfaces Bag, List, Set, Queue and Stack are pretty much complete. 
-I don't plan on adding more container interfaces.
+The interfaces Bag, List, Set, Queue and Stack are complete and every 
+interface has an implementation.
+I don't plan on adding any more container interfaces for the v1 release. 
+Maybe a SortedList and a generic Tree for v2...
 
-There is work to be done in the container implementations, query api, 
+There is work to be done in the tests and benchmarks of the implementations.
+The query api could use some query operators, and there should be more convenience
+functions for creating and converting 
 and in conversion from and to slices, maps and channels.
 
 Containers
