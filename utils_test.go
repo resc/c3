@@ -11,15 +11,31 @@ func TestToSliceOfIterable(t *testing.T) {
 	s := ToSlice(Range(0, 9))
 	assert(t, 10, len(s), "len(s)")
 }
+
 func TestToSliceOfIterableReverse(t *testing.T) {
 	s := ToSlice(Range(9, 0))
 
 	assert(t, 10, len(s), "len(s)")
 }
+
 func TestToSliceOfCollection(t *testing.T) {
 	r := ListOf(0, 1, 2, 3)
 	s := ToSlice(r)
 	assert(t, 4, len(s), "len(s)")
+}
+
+func TestRepeat(t *testing.T) {
+	n := 3
+	count := 0
+	for i := Repeat(n, n).Iterator(); i.MoveNext(); {
+		if val, ok := i.Value().(int); !ok || val != n {
+			t.Errorf("Expected value %v, got %v", n, val)
+		}
+		count++
+	}
+	if count != n {
+		t.Error("Expected ", n, ", got ", count)
+	}
 }
 
 ///////////////////////////////

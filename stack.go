@@ -8,6 +8,10 @@ func (s *stack) Len() int {
 	return s.l.Len()
 }
 
+func (s *stack) Clear() {
+	s.l.Clear()
+}
+
 func (s *stack) Peek() (interface{}, bool) {
 	return s.l.Last()
 }

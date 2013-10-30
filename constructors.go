@@ -29,7 +29,7 @@ func NewStack() Stack {
 //
 // Usage:
 //		list := c3.ListOf(1,2,3)
-//		q := Query(list).
+//		q := NewQuery(list).
 //			Where(/* filter function here */).
 //			Select( /* selector function here */).
 //			ToList() /* collect the results */

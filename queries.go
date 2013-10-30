@@ -1,5 +1,8 @@
 package c3
 
+import "math/rand"
+import "time"
+
 // The c3 query representation
 type Q struct {
 	result Iterable
@@ -46,6 +49,13 @@ func (q *Q) SelectMany(selector ManySelector) *Q {
 // For applies the action to every item in the query result.
 func (q *Q) For(action Action) {
 	For(q, action)
+}
+
+// Run runs the query and discards the results.
+func (q *Q) Run() {
+	for i := q.Iterator(); i.MoveNext(); {
+		// do nothing.
+	}
 }
 
 // Go applies the action to every item in the query result on a
@@ -153,8 +163,8 @@ func (q *Q) Contains(item interface{}) bool {
 	}).Any()
 }
 
-// Len counts the number of results.
-func (q *Q) Len() int {
+// Count counts the number of results.
+func (q *Q) Count() int {
 	count := 0
 	for i := q.Iterator(); i.MoveNext(); {
 		count++
@@ -196,11 +206,12 @@ func (q *Q) Concat(items Iterable) *Q {
 func (q *Q) Distinct() *Q {
 	set := make(map[interface{}]bool)
 	return q.Where(func(v interface{}) bool {
-		if set[v] {
-			return false
+		if !set[v] {
+			set[v] = true
+			return true
 		}
-		set[v] = true
-		return true
+
+		return false
 	})
 }
 
@@ -224,4 +235,68 @@ func (q *Q) Skip(count int) *Q {
 		skipped++
 		return skipped > count
 	})
+}
+
+// Shuffle randomizes the order of the result set.
+func (q *Q) Shuffle() *Q {
+	return &Q{MakeIterable(func() Generate {
+		// make and fill the shuffle buffer
+		bufCap := 32
+		buf := make([]interface{}, 0, bufCap)
+		i := q.Iterator()
+		for len(buf) < bufCap && i.MoveNext() {
+			buf = append(buf, i.Value())
+		}
+
+		// setup the iterator state
+		shuffleDone := len(buf) == 0
+		sourceDone := len(buf) < bufCap
+		if shuffleDone {
+			// just return
+			return func() (interface{}, bool) {
+				return nil, false
+			}
+		}
+
+		// setup the randomizer
+		rndSeed := time.Now().UnixNano()
+		rndSource := rand.NewSource(rndSeed)
+		rnd := rand.New(rndSource)
+
+		// return the Generate function.
+		return func() (interface{}, bool) {
+
+			if shuffleDone {
+				return nil, false
+			}
+
+			// get the value from the buffer
+			bufLen := len(buf)
+			index := rnd.Intn(bufLen)
+			value := buf[index]
+
+			// get the next value from the source
+			if !sourceDone {
+				if i.MoveNext() {
+					buf[index] = i.Value()
+					return value, true
+				} else {
+					sourceDone = true
+				}
+			}
+
+			// move the last buffer value into the current value's location
+			lastIndex := bufLen - 1
+			// if index==lastIndex this is an expensive NOP
+			buf[index] = buf[lastIndex]
+
+			// clear the last value's location to help the
+			// garbage collector and then shorten the buffer
+			buf[lastIndex] = nil
+			buf = buf[:lastIndex]
+
+			shuffleDone = len(buf) == 0
+			return value, true
+		}
+	})}
 }

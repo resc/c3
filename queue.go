@@ -16,6 +16,16 @@ func (q *queue) Len() int {
 	return q.length
 }
 
+func (q *queue) Clear() {
+	if q.length == 0 {
+		return
+	}
+	q.head = nil
+	q.tail = nil
+	q.length = 0
+	q.version++
+}
+
 func (q *queue) Contains(item interface{}) bool {
 	for e := q.head; e != nil; e = e.next {
 		if e.item == item {

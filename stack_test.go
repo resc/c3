@@ -40,34 +40,44 @@ func TestIterateEmptyStack(t *testing.T) {
 	}
 }
 
-func BenchmarkPushStack(b *testing.B) {
+func BenchmarkStackPush1000(b *testing.B) {
+	value := wrap(1)
 	s := NewStack()
 	b.ReportAllocs()
 	b.ResetTimer()
-
 	for i := 0; i < b.N; i++ {
-		s.Push(i)
+		for n := 0; n < 1000; n++ {
+			s.Push(value)
+		}
 	}
 }
 
-func BenchmarkPopStack(b *testing.B) {
+func BenchmarkStackPushPop1000(b *testing.B) {
+	value := wrap(1)
 	s := NewStack()
-	for i := 0; i < b.N; i++ {
-		s.Push(i)
-	}
+	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		s.Pop()
+		for n := 0; n < 500; n++ {
+			s.Push(value)
+		}
+		for n := 0; n < 500; n++ {
+			s.Pop()
+		}
 	}
 }
 
-func BenchmarkConsumeStack(b *testing.B) {
+func BenchmarkConsumeStack1000(b *testing.B) {
+	value := wrap(1)
 	s := NewStack()
-	for i := 0; i < b.N; i++ {
-		s.Push(i)
-	}
+	b.ReportAllocs()
 	b.ResetTimer()
-	for c := s.Consumer(); c.MoveNext(); {
-		c.Value()
+	for i := 0; i < b.N; i++ {
+		for n := 0; n < 500; n++ {
+			s.Push(value)
+		}
+		for c := s.Consumer(); c.MoveNext(); {
+			c.Value()
+		}
 	}
 }

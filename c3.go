@@ -88,6 +88,7 @@ type ReadOnlyList interface {
 
 // Bag is an unordered mutable container
 type Bag interface {
+	Clearer
 	ReadOnlyBag
 	// Add adds an item to the container,
 	// returns true if the container was modified,
@@ -146,6 +147,12 @@ type Generator func() Generate
 // Returns the next item and true or nil and false if there are no more items.
 type Generate func() (interface{}, bool)
 
+// Clearer provides a method to clear the container.
+type Clearer interface {
+	// Clear removes all items from the container.
+	Clear()
+}
+
 // Consumer is an Iterator that removes items from a container.
 type Consumer interface {
 	Iterator
@@ -160,6 +167,7 @@ type Consumable interface {
 type Queue interface {
 	ReadOnlyBag
 	Peeker
+	Clearer
 	Consumable
 	// Appends an item at the tail of the queue,
 	// returns true if the queue was modified,
@@ -175,6 +183,7 @@ type Queue interface {
 type Stack interface {
 	ReadOnlyBag
 	Peeker
+	Clearer
 	Consumable
 	// Adds an item at the top of the stack,
 	// returns true if the stack was modified,

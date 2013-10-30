@@ -27,6 +27,14 @@ func (s *set) Delete(item interface{}) bool {
 	return false
 }
 
+func (s *set) Clear() {
+	if s.Len() == 0 {
+		return
+	}
+	s.items = make(map[interface{}]bool)
+	s.version++
+}
+
 func (s *set) Len() int {
 	return len(s.items)
 }

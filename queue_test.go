@@ -34,55 +34,45 @@ func TestQueue(t *testing.T) {
 	assert(t, 0, q.Len(), "q.Len()")
 }
 
-func BenchmarkEnqueue(b *testing.B) {
-	q := NewQueue()
-
+func BenchmarkEnqueue1000(b *testing.B) {
+	value := wrap(1)
 	b.ReportAllocs()
-	b.ResetTimer()
-
 	for i := 0; i < b.N; i++ {
-		q.Enqueue(i)
+		q := NewQueue()
+		for n := 0; n < 1000; n++ {
+			q.Enqueue(value)
+		}
 	}
 }
 
-func BenchmarkDequeue(b *testing.B) {
-	q := NewQueue()
-
-	// Too fast to benchmark, memory usage wil
-	// blow this up beyond 10.000.000 iterations.
-	if b.N > 10000000 {
-		b.Logf("%v iterations will kill the benchmark due to mem usage", b.N)
-		return
-	}
-
+func BenchmarkEnqDeq1000(b *testing.B) {
+	value := wrap(1)
+	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		q.Enqueue(i)
-	}
-
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		q.Dequeue()
+		q := NewQueue()
+		for n := 0; n < 1000; n++ {
+			q.Enqueue(value)
+		}
+		for n := 0; n < 1000; n++ {
+			q.Dequeue()
+		}
 	}
 }
 
-func BenchmarkConsumeQueue(b *testing.B) {
-	q := NewQueue()
-
-	// Too fast to benchmark, memory usage wil
-	// blow this up beyond 10.000.000 iterations.
-	if b.N > 10000000 {
-		b.Logf("%v iterations will kill the benchmark due to mem usage", b.N)
-		return
-	}
-
+func BenchmarkEnqConsume1000(b *testing.B) {
+	value := wrap(1)
+	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		q.Enqueue(i)
+		q := NewQueue()
+		for n := 0; n < 1000; n++ {
+			q.Enqueue(value)
+		}
+		for i := q.Consumer(); i.MoveNext(); {
+			i.Value()
+		}
 	}
+}
 
-	b.ResetTimer()
-
-	for i := q.Consumer(); i.MoveNext(); {
-		i.Value()
-	}
+func wrap(item interface{}) interface{} {
+	return item
 }

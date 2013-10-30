@@ -15,6 +15,21 @@ func (l *list) Add(item interface{}) bool {
 	return true
 }
 
+func (l *list) Clear() {
+	if l.Len() == 0 {
+		return
+	}
+	if l.Len() <= 64 {
+		for i := 0; i < len(l.items); i++ {
+			l.items[i] = nil
+		}
+		l.items = l.items[:0]
+	} else {
+		l.items = make([]interface{}, 0, 4)
+	}
+	l.version++
+}
+
 func (l *list) InsertAt(index int, item interface{}) bool {
 	if 0 > index || index > len(l.items) {
 		return false
