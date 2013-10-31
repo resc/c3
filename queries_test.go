@@ -72,7 +72,7 @@ func TestShuffles(t *testing.T) {
 */
 
 func BenchmarkShuffle1000(b *testing.B) {
-	var q = NewQuery(testSource())
+	var q = NewQuery(testSource(nil))
 	shuffle := q.Shuffle()
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -89,6 +89,41 @@ func TestEmptyShuffle(t *testing.T) {
 
 	if result.Len() != n {
 		t.Errorf("Expected %v results, got %v", n, result.Len())
+	}
+}
+
+func TestNonEmptyShuffle(t *testing.T) {
+	n := 10
+	q := NewQuery(Range(0, n-1))
+
+	result := q.Shuffle().ToList()
+
+	if result.Len() != n {
+		t.Errorf("Expected %v results, got %v", n, result.Len())
+	}
+}
+
+func TestSort(t *testing.T) {
+	l := NewQuery(testSource(t)).Shuffle().ToList()
+	if l.Len() != 1000 {
+		t.Error("wrong count")
+	}
+
+	l = NewQuery(l).Sort(func(a, b interface{}) bool {
+		return a.(int) < b.(int)
+	}).ToList()
+
+	if l.Len() != 1000 {
+		t.Error("wrong count")
+	}
+
+	var index = 0
+	for i := l.Iterator(); i.MoveNext(); {
+		if i.Value().(int) != index {
+			t.Errorf("Expected %v, got %v", index, ToSlice(l))
+			return
+		}
+		index++
 	}
 }
 
@@ -169,6 +204,21 @@ func isMod2(v interface{}) bool {
 	return v.(int)%2 == 0
 }
 
-func testSource() Iterable {
-	return QueueOf(Range(0, 1000))
+func testSource(t *testing.T) Iterable {
+	n := 1000
+	source := ToQueue(Range(0, n-1))
+	if t != nil {
+		if source.Len() != n {
+			panic("No items!")
+		}
+		index := 0
+		for i := source.Iterator(); i.MoveNext(); {
+			val, ok := i.Value().(int)
+			if !ok || val != index {
+				t.Errorf("unexpected sequence expected %v got %v", index, val)
+			}
+			index++
+		}
+	}
+	return source
 }

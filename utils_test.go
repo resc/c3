@@ -24,6 +24,33 @@ func TestToSliceOfCollection(t *testing.T) {
 	assert(t, 4, len(s), "len(s)")
 }
 
+func TestSortList(t *testing.T) {
+	l := ListOf(3, 1, 0, 2)
+	if l.Len() < 4 {
+		t.Error("empty set!")
+	}
+
+	Sort(l, func(a, b interface{}) bool {
+		aval := a.(int)
+		bval := b.(int)
+		return aval < bval
+	})
+
+	if l.Len() < 4 {
+		t.Error("empty set!")
+	}
+
+	var index = 0
+	for i := l.Iterator(); i.MoveNext(); {
+		val, _ := i.Value().(int)
+		if val != index {
+			t.Errorf("Expected %v, got %v", index, ToSlice(l))
+			return
+		}
+		index++
+	}
+}
+
 func TestRepeat(t *testing.T) {
 	n := 3
 	count := 0
@@ -35,6 +62,16 @@ func TestRepeat(t *testing.T) {
 	}
 	if count != n {
 		t.Error("Expected ", n, ", got ", count)
+	}
+}
+
+func TestRange(t *testing.T) {
+	s := ToQueue(Range(0, 3))
+	for n := 0; n < 4; n++ {
+		val, ok := s.Dequeue()
+		if !ok || val.(int) != n {
+			t.Error("Expected ", n, " got ", val)
+		}
 	}
 }
 

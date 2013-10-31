@@ -10,6 +10,17 @@ func TestEmptyQueue(t *testing.T) {
 		t.Errorf("Expected 0, got %v", q.Len())
 	}
 }
+func TestQueueIterator(t *testing.T) {
+	q := QueueOf(0, 1, 2, 3)
+	index := 0
+	for i := q.Iterator(); i.MoveNext(); {
+		val, ok := i.Value().(int)
+		if !ok || val != index {
+			t.Error("Expected ", index, " got ", val)
+		}
+		index++
+	}
+}
 
 func TestQueue(t *testing.T) {
 	q := NewQueue()

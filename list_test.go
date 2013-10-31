@@ -66,6 +66,20 @@ func TestIndexOf(t *testing.T) {
 	assertIndexOf(t, l, 2, 1)
 }
 
+func TestListSwap(t *testing.T) {
+	l := NewList()
+	l.Add(1)
+	l.Add(2)
+	l.Swap(0, 1)
+
+	assertIndexOf(t, l, 1, 1)
+	assertIndexOf(t, l, 2, 0)
+	l.Swap(0, 1)
+
+	assertIndexOf(t, l, 1, 0)
+	assertIndexOf(t, l, 2, 1)
+}
+
 func TestListIteratorUninitializedValueAccess(t *testing.T) {
 	l := ListOf(1, 2, 3)
 	i := l.Iterator()

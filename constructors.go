@@ -93,6 +93,22 @@ func MakeIterator(g Generate) Iterator {
 	return &generateIterator{g, nil}
 }
 
+// MakeGenerator converts the Iterable into a Generator function.
+func MakeGenerator(items Iterable) Generator {
+	return func() Generate {
+		return MakeGenerate(items.Iterator())
+	}
+}
+
+// MakeGenerate converts the Iterator into a Generate function.
+func MakeGenerate(i Iterator) Generate {
+	return func() (interface{}, bool) {
+		ok := i.MoveNext()
+		value := i.Value()
+		return value, ok
+	}
+}
+
 // IterableOf creates an Iterable with the given items.
 func IterableOf(items ...interface{}) Iterable {
 	return ListOf(items...)

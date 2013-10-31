@@ -15,6 +15,14 @@ func (l *list) Add(item interface{}) bool {
 	return true
 }
 
+func (l *list) Swap(i, j int) {
+	ival := l.items[i]
+	jval := l.items[j]
+	l.items[i] = jval
+	l.items[j] = ival
+	l.version++
+}
+
 func (l *list) Clear() {
 	if l.Len() == 0 {
 		return

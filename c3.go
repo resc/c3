@@ -107,6 +107,8 @@ type List interface {
 	// returns true if the container was modified,
 	// false if it was not modified.
 	InsertAt(index int, item interface{}) bool
+	// Swaps the 2 items at the given indexes
+	Swap(i, j int)
 	// Deletes the item at the given index,
 	// returns true if the container was modified,
 	// false if it was not modified.

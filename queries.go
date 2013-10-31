@@ -9,7 +9,7 @@ type Q struct {
 }
 
 // Action is invoked for every item in the query result.
-type Action func(interface{})
+type Action func(item interface{})
 
 // Predicate if a function that returns true if the predicate holds for the item.
 type Predicate func(item interface{}) bool
@@ -18,7 +18,10 @@ type Predicate func(item interface{}) bool
 type Aggregator func(item interface{}, aggregate interface{}) (aggregateResult interface{})
 
 // Selector converts an item into another item
-type Selector func(interface{}) interface{}
+type Selector func(item interface{}) interface{}
+
+// Lesser compares 2 items, such that a<b:true, false otherwise
+type Lesser func(a, b interface{}) bool
 
 // ManySelector converts 1 item into zero or more items
 type ManySelector func(interface{}) Iterable
@@ -77,6 +80,10 @@ func (q *Q) ToSlice() []interface{} {
 
 // ToList puts the query results in a new List
 func (q *Q) ToList() List {
+	result, ok := q.result.(List)
+	if ok {
+		return result
+	}
 	return ToList(q)
 }
 
@@ -235,6 +242,13 @@ func (q *Q) Skip(count int) *Q {
 		skipped++
 		return skipped > count
 	})
+}
+
+// Sort sorts the result set using the lesser function.
+func (q *Q) Sort(lesser Lesser) *Q {
+	l := q.ToList()
+	Sort(l, lesser)
+	return &Q{l}
 }
 
 // Shuffle randomizes the order of the result set.

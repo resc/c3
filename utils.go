@@ -27,6 +27,12 @@ func (x *nilIterator) MoveNext() bool { return false }
 
 func (x *nilIterator) Value() interface{} { return nil }
 
+// Sort sorts the list with the given Lesser function
+func Sort(l List, lesser Lesser) {
+	s := &Sorter{l, lesser}
+	s.Sort()
+}
+
 // ToSlice makes a new slice of the items in an Iterable
 func ToSlice(c Iterable) []interface{} {
 	var slice []interface{}

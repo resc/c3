@@ -71,7 +71,7 @@ func (q *queue) Enqueue(item interface{}) bool {
 }
 
 func (q *queue) Iterator() Iterator {
-	return &queueIterator{q, q.head, q.version}
+	return &queueIterator{q, nil, false, q.version}
 }
 
 func (q *queue) Consumer() Consumer {
