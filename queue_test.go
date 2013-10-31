@@ -36,9 +36,9 @@ func TestQueue(t *testing.T) {
 
 func BenchmarkEnqueue1000(b *testing.B) {
 	value := wrap(1)
+	q := NewQueue()
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		q := NewQueue()
 		for n := 0; n < 1000; n++ {
 			q.Enqueue(value)
 		}
@@ -47,9 +47,9 @@ func BenchmarkEnqueue1000(b *testing.B) {
 
 func BenchmarkEnqDeq1000(b *testing.B) {
 	value := wrap(1)
+	q := NewQueue()
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		q := NewQueue()
 		for n := 0; n < 1000; n++ {
 			q.Enqueue(value)
 		}
@@ -61,9 +61,9 @@ func BenchmarkEnqDeq1000(b *testing.B) {
 
 func BenchmarkEnqConsume1000(b *testing.B) {
 	value := wrap(1)
+	q := NewQueue()
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		q := NewQueue()
 		for n := 0; n < 1000; n++ {
 			q.Enqueue(value)
 		}

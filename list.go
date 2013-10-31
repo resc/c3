@@ -19,7 +19,7 @@ func (l *list) Clear() {
 	if l.Len() == 0 {
 		return
 	}
-	if l.Len() <= 64 {
+	if l.Len() <= 1024 {
 		for i := 0; i < len(l.items); i++ {
 			l.items[i] = nil
 		}

@@ -49,6 +49,7 @@ func BenchmarkStackPush1000(b *testing.B) {
 		for n := 0; n < 1000; n++ {
 			s.Push(value)
 		}
+		s.Clear()
 	}
 }
 
@@ -58,10 +59,10 @@ func BenchmarkStackPushPop1000(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		for n := 0; n < 500; n++ {
+		for n := 0; n < 1000; n++ {
 			s.Push(value)
 		}
-		for n := 0; n < 500; n++ {
+		for n := 0; n < 1000; n++ {
 			s.Pop()
 		}
 	}
@@ -73,7 +74,7 @@ func BenchmarkConsumeStack1000(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		for n := 0; n < 500; n++ {
+		for n := 0; n < 1000; n++ {
 			s.Push(value)
 		}
 		for c := s.Consumer(); c.MoveNext(); {

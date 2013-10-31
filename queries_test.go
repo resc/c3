@@ -72,7 +72,8 @@ func TestShuffles(t *testing.T) {
 */
 
 func BenchmarkShuffle1000(b *testing.B) {
-	var shuffle = NewQuery(testSource()).Shuffle()
+	var q = NewQuery(testSource())
+	shuffle := q.Shuffle()
 	b.ReportAllocs()
 	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
