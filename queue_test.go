@@ -20,6 +20,9 @@ func TestQueueIterator(t *testing.T) {
 		}
 		index++
 	}
+	if index != 4 {
+		t.Error("Too few iterations")
+	}
 }
 
 func TestQueue(t *testing.T) {
