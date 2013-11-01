@@ -3,6 +3,7 @@ package c3
 type queue struct {
 	head    *entry
 	tail    *entry
+	free *entry
 	version int
 	length  int
 }
@@ -22,6 +23,7 @@ func (q *queue) Clear() {
 	}
 	q.head = nil
 	q.tail = nil
+	q.free = nil
 	q.length = 0
 	q.version++
 }
@@ -43,6 +45,7 @@ func (q *queue) Peek() (interface{}, bool) {
 }
 
 func (q *queue) Dequeue() (interface{}, bool) {
+// TODO add removed entry to the free list.
 	if q.head != nil {
 		e := q.head
 		q.head = e.next
@@ -57,6 +60,7 @@ func (q *queue) Dequeue() (interface{}, bool) {
 }
 
 func (q *queue) Enqueue(item interface{}) bool {
+// TODO check if there's any free entries.
 	e := &entry{item, nil}
 	if q.tail == nil {
 		q.head = e
