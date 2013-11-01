@@ -2,7 +2,7 @@
 c3
 ==
 
-The common container collection a.k.a. c3 for go.
+The common container collection a.k.a. c3 for go 1.1.
 
 
 Introduction
