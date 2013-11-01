@@ -15,11 +15,7 @@ very many convenience methods. This library aims to remedy that.
 Code Quality
 ============
 
-This library has started its life just a few days ago.
-Its not completed yet, and has not seen much of the world either.
-
-Not all containers have implementations, and the query api is not complete,
-but I don't expect many changes in the interfaces.
+This library has started its life in october 2013 and is still in beta.
 
 Contributions And Bug Reports
 =============================
