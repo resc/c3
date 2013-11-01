@@ -80,13 +80,13 @@ but Go's type assertions are nice enough to make it only a minor annoyance.
 Quering containers
 ==================
 
-The c3.Query() function provides an entrypoint for the query api of c3.
+The c3.NewQuery() function provides an entrypoint for the query api of c3.
 This api is modelled after the C# Linq api.
 
 Example:
 
 	l := c3.ListOf(1, 2, 3, 4)
-	q := c3.Query(l)
+	q := c3.NewQuery(l)
 	result := q.Where(func(e interface{})) { return e.(int)%2 == 0 }).
 	            Select(func(e interface{}) interface{} { return e.(int) * 10 }).
 				ToList()
@@ -112,7 +112,7 @@ Example:
 	} 
 
 	l := c3.ListOf(1, 2, 3, 4)
-	q := c3.Query(l)
+	q := c3.NewQuery(l)
 	result := q.Where(isMod2).
 	            Select(times10).
 				ToList()	
