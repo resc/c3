@@ -12,7 +12,7 @@ func NewBag() Bag {
 
 // NewQueue creates a new, empty Queue.
 func NewQueue() Queue {
-	return &queue{nil, nil, nil, 0, 0}
+	return &queue{nil, nil, nil, 0, 0, 0}
 }
 
 // NewSet creates a new, empty Set.
