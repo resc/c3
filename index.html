@@ -1,0 +1,175 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>c3 by ReSc</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/ReSc/c3">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/ReSc/c3/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/ReSc/c3/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>c3</h1>
+          <p>Common container collection a.k.a. c3 for go</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/ReSc">ReSc</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <p><a href="https://travis-ci.org/ReSc/c3"><img src="https://travis-ci.org/ReSc/c3.png?branch=master" alt="Build Status"></a></p>
+
+<h1>
+<a name="c3" class="anchor" href="#c3"><span class="octicon octicon-link"></span></a>c3</h1>
+
+<p>The common container collection a.k.a. c3 for go 1.1.</p>
+
+<h1>
+<a name="introduction" class="anchor" href="#introduction"><span class="octicon octicon-link"></span></a>Introduction</h1>
+
+<p>This library provides a few basic container interfaces that are missing in Go
+in my humble opinion. The slice and map containers are nice, but they don't provide
+very many convenience methods. This library aims to remedy that.</p>
+
+<p>The code lives at <a href="http://github.com/ReSc/c3#c3">http://github.com/ReSc/c3#c3</a></p>
+
+<p>You can find the CI builds at <a href="http://travis-ci.org/ReSc/c3">http://travis-ci.org/ReSc/c3</a></p>
+
+<p>The documentation can be found at <a href="http://godoc.org/github.com/ReSc/c3">http://godoc.org/github.com/ReSc/c3</a></p>
+
+<h1>
+<a name="code-quality" class="anchor" href="#code-quality"><span class="octicon octicon-link"></span></a>Code Quality</h1>
+
+<p>This library has started its life in october 2013 and is still in beta.</p>
+
+<h1>
+<a name="contributions-and-bug-reports" class="anchor" href="#contributions-and-bug-reports"><span class="octicon octicon-link"></span></a>Contributions And Bug Reports</h1>
+
+<p>Send pull requests! </p>
+
+<p>If you have a bug to report I would be very grateful If
+you could submit it as a pull request with a failing test.</p>
+
+<h1>
+<a name="road-map" class="anchor" href="#road-map"><span class="octicon octicon-link"></span></a>Road Map</h1>
+
+<p>The interfaces Bag, List, Set, Queue and Stack are complete and every 
+interface has an implementation.
+I don't plan on adding any more container interfaces for the v1 release. 
+Maybe a SortedList and a generic Tree for v2...</p>
+
+<p>There is work to be done in the tests and benchmarks of the implementations.
+The query api could use some query operators, and there should be more convenience
+functions for creating and converting 
+and in conversion from and to slices, maps and channels.</p>
+
+<h1>
+<a name="containers" class="anchor" href="#containers"><span class="octicon octicon-link"></span></a>Containers</h1>
+
+<ul>
+<li>Iterable: A container that provides a way to iterate over its elements</li>
+<li>Bag: An unordered container.</li>
+<li>List: An ordered, indexable container.</li>
+<li>Set: An unordered container that does not allow duplicates, and provides a few basic set operations.</li>
+<li>Stack: A Last-In First-Out container.</li>
+<li>Queue: A First-In First-Out container.</li>
+</ul><h1>
+<a name="thread-and-goroutine-safety" class="anchor" href="#thread-and-goroutine-safety"><span class="octicon octicon-link"></span></a>Thread And Goroutine Safety</h1>
+
+<p>These containers are <em>not</em> goroutine- or thread safe.</p>
+
+<p>There is a basic check for concurrent modification while iterating over a container
+so you'll at least know when things get corrupted because of concurrent modifications
+Every mutation of a container increments the container version, and Iterator checks
+this version on every MoveNext(), and panics if it is not what it expects.</p>
+
+<p>This also means you cannot modify a container while iterating over it.</p>
+
+<p>Example:</p>
+
+<pre><code>// Don't do this!
+l := c3.ListOf(1,2,3,4)
+for i := l.Iterator(); i.MoveNext(); {
+    // vv bug here, cannot modify container while iterating over it! vv
+    l.Add(i.Value().(int)*2)
+}
+</code></pre>
+
+<h1>
+<a name="element-types" class="anchor" href="#element-types"><span class="octicon octicon-link"></span></a>Element Types</h1>
+
+<p>Because Go does not have generics (yet..) I choose <code>interface{}</code> for the element type.
+This means there will be casting involved with the use of the containers in c3
+but Go's type assertions are nice enough to make it only a minor annoyance.</p>
+
+<h1>
+<a name="quering-containers" class="anchor" href="#quering-containers"><span class="octicon octicon-link"></span></a>Quering containers</h1>
+
+<p>The c3.NewQuery() function provides an entrypoint for the query api of c3.
+This api is modelled after the C# Linq api.</p>
+
+<p>Example:</p>
+
+<pre><code>l := c3.ListOf(1, 2, 3, 4)
+q := c3.NewQuery(l)
+result := q.Where(func(e interface{})) { return e.(int)%2 == 0 }).
+            Select(func(e interface{}) interface{} { return e.(int) * 10 }).
+            ToList()
+</code></pre>
+
+<p>As you can see this api would be much nicer if Go had lambda expressions so that you could type</p>
+
+<pre><code>e =&gt; e.(int) * 10
+</code></pre>
+
+<p>instead of</p>
+
+<pre><code>func(e interface{}) interface{} { return e.(int) * 10 }
+</code></pre>
+
+<p>as an alternative you can define named functions to improve readability</p>
+
+<p>Example:</p>
+
+<pre><code>func isMod2(e interface{}) bool {
+    return e.(int)%2 == 0
+} 
+
+func times10(e interface{}) interface{} {
+    return e.(int)*10
+} 
+
+l := c3.ListOf(1, 2, 3, 4)
+q := c3.NewQuery(l)
+result := q.Where(isMod2).
+            Select(times10).
+            ToList()    
+</code></pre>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
