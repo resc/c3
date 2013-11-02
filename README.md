@@ -12,6 +12,12 @@ This library provides a few basic container interfaces that are missing in Go
 in my humble opinion. The slice and map containers are nice, but they don't provide
 very many convenience methods. This library aims to remedy that.
 
+The code lives at http://github.com/ReSc/c3#c3
+
+You can find the CI builds at http://travis-ci.org/ReSc/c3
+
+The documentation can be found at http://godoc.org/github.com/ReSc/c3
+
 Code Quality
 ============
 

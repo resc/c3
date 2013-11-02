@@ -10,6 +10,13 @@
 //		- Stack: a lifo container.
 //
 // It also provides a query api for those containers that looks like C#'s Linq
+//
+// The code lives at http://github.com/ReSc/c3#c3
+//
+// You can find the CI builds at http://travis-ci.org/ReSc/c3
+//
+// The documentation can be found at http://godoc.org/github.com/ReSc/c3
+//
 package c3
 
 // Iterator provides a way to iterate over a container
