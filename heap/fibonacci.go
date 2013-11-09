@@ -414,10 +414,8 @@ func (h *FibHeap) newNode(data int, key float64) *fibNode {
 		n = &fibNode{}
 	} else {
 		h.free = n.child
-		n.child = nil
 	}
-	n.data = data
-	n.key = key
+	n.reset(data, key)
 	return n
 }
 
