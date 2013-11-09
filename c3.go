@@ -15,7 +15,7 @@
 //
 // You can find the CI builds at http://travis-ci.org/ReSc/c3
 //
-// The documentation can be found at http://godoc.org/github.com/ReSc/c3
+// The api documentation can be found at http://godoc.org/github.com/ReSc/c3
 //
 package c3
 
