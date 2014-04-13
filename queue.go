@@ -52,7 +52,7 @@ func (q *queue) Peek() (interface{}, bool) {
 	if q.head != nil {
 		return q.head.item, true
 	}
-	return nil, false
+	return defaultElementValue, false
 }
 
 func (q *queue) Dequeue() (interface{}, bool) {
@@ -60,7 +60,7 @@ func (q *queue) Dequeue() (interface{}, bool) {
 		// remove entry from queue
 		e := q.head
 		item := e.item
-		e.item = nil
+		e.item = defaultElementValue
 		q.head = e.next
 		if e.next == nil {
 			q.tail = nil
@@ -78,7 +78,7 @@ func (q *queue) Dequeue() (interface{}, bool) {
 		q.version++
 		return item, true
 	}
-	return nil, false
+	return defaultElementValue, false
 }
 
 func (q *queue) Enqueue(item interface{}) bool {
@@ -111,5 +111,5 @@ func (q *queue) Iterator() Iterator {
 }
 
 func (q *queue) Consumer() Consumer {
-	return &queueConsumer{q, nil}
+	return &queueConsumer{q, defaultElementValue}
 }

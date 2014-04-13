@@ -53,7 +53,7 @@ func (s *set) Iterator() Iterator {
 				panic("Concurrent modification detected")
 			}
 			if len(iter) == 0 {
-				return nil, false
+				return defaultElementValue, false
 			}
 
 			item := iter[0]

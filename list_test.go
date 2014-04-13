@@ -9,23 +9,23 @@ func TestAdd(t *testing.T) {
 	assert(t, 0, l.Len(), "for Len()")
 }
 func TestAddNil(t *testing.T) {
-	l := ListOf(nil, nil, nil)
+	l := ListOf(defaultElementValue, defaultElementValue, defaultElementValue)
 
 	assert(t, 3, l.Len(), "l.Len()")
-	assertContains(t, l, nil, true)
+	assertContains(t, l, defaultElementValue, true)
 }
 
 func TestIndexOfNil(t *testing.T) {
-	l := ListOf(nil, nil, nil)
+	l := ListOf(defaultElementValue, defaultElementValue, defaultElementValue)
 
-	assertIndexOf(t, l, nil, 0)
+	assertIndexOf(t, l, defaultElementValue, 0)
 
-	index, ok := l.LastIndexOf(nil)
-	assert(t, true, ok, "ok")
+	index, ok := l.LastIndexOf(defaultElementValue)
+	assertb(t, true, ok, "ok")
 	assert(t, 2, index, "index")
 
-	index, ok = l.NextIndexOf(0, nil)
-	assert(t, true, ok, "ok")
+	index, ok = l.NextIndexOf(0, defaultElementValue)
+	assertb(t, true, ok, "ok")
 	assert(t, 1, index, "index")
 
 }
@@ -51,11 +51,11 @@ func TestContains(t *testing.T) {
 
 func TestContainsFail(t *testing.T) {
 	l := BagOf(1, 2, 3)
-	assert(t, false, l.Contains(0), "l.Contains(0)")
-	assert(t, true, l.Contains(1), "l.Contains(1)")
-	assert(t, true, l.Contains(2), "l.Contains(2)")
-	assert(t, true, l.Contains(3), "l.Contains(3)")
-	assert(t, false, l.Contains(4), "l.Contains(4)")
+	assertb(t, false, l.Contains(0), "l.Contains(0)")
+	assertb(t, true, l.Contains(1), "l.Contains(1)")
+	assertb(t, true, l.Contains(2), "l.Contains(2)")
+	assertb(t, true, l.Contains(3), "l.Contains(3)")
+	assertb(t, false, l.Contains(4), "l.Contains(4)")
 }
 
 func TestIndexOf(t *testing.T) {
@@ -84,7 +84,7 @@ func TestListIteratorUninitializedValueAccess(t *testing.T) {
 	l := ListOf(1, 2, 3)
 	i := l.Iterator()
 	value := i.Value()
-	if value != nil {
+	if value != defaultElementValue {
 		t.Error("Expected nil")
 	}
 }

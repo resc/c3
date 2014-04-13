@@ -10,6 +10,6 @@ func (i *selectManyIterable) Iterator() Iterator {
 		i.items.Iterator(),
 		i.selector,
 		emptyIterator,
-		nil,
+		defaultElementValue,
 	}
 }

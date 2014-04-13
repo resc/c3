@@ -33,9 +33,9 @@ func (s *stack) Push(item interface{}) bool {
 }
 
 func (s *stack) Iterator() Iterator {
-	return &stackIterator{s.l, s.l.Len(), s.l.version, nil}
+	return &stackIterator{s.l, s.l.Len(), s.l.version, defaultElementValue}
 }
 
 func (s *stack) Consumer() Consumer {
-	return &stackConsumer{s, nil}
+	return &stackConsumer{s, defaultElementValue}
 }

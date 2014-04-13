@@ -19,6 +19,8 @@
 //
 package c3
 
+var defaultElementValue interface{}
+
 // Iterator provides a way to iterate over a container
 //
 // Usage:

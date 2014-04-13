@@ -22,7 +22,7 @@ func (i *selectManyIterator) MoveNext() bool {
 		return true
 	}
 	i.iterator = emptyIterator
-	i.value = nil
+	i.value = defaultElementValue
 	return false
 }
 

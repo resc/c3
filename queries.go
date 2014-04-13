@@ -132,13 +132,13 @@ func (q *Q) First() (interface{}, bool) {
 	for i := q.Iterator(); i.MoveNext(); {
 		return i.Value(), true
 	}
-	return nil, false
+	return defaultElementValue, false
 }
 
 // Last returns the last query result and true,
 // or nil and false if there are no results.
 func (q *Q) Last() (interface{}, bool) {
-	value, ok := interface{}(nil), false
+	value, ok := defaultElementValue, false
 	for i := q.Iterator(); i.MoveNext(); {
 		value, ok = i.Value(), true
 	}
@@ -204,9 +204,7 @@ func (q *Q) Append(items ...interface{}) *Q {
 
 // Concat appends the items to the query result.
 func (q *Q) Concat(items Iterable) *Q {
-	return NewQuery(ListOf(q, items)).SelectMany(func(v interface{}) Iterable {
-		return v.(Iterable)
-	})
+	return NewQuery(&concatIterable{q, items})
 }
 
 // Distinct filters non-unique items from the query result.
@@ -220,6 +218,36 @@ func (q *Q) Distinct() *Q {
 
 		return false
 	})
+}
+
+type concatIterable struct {
+	a, b Iterable
+}
+
+func (i *concatIterable) Iterator() Iterator {
+	return &concatIterator{i.a.Iterator(), i.b.Iterator(), defaultElementValue}
+}
+
+type concatIterator struct {
+	a, b  Iterator
+	value interface{}
+}
+
+func (i *concatIterator) Value() interface{} {
+	return i.value
+}
+
+func (i *concatIterator) MoveNext() bool {
+	if i.a.MoveNext() {
+		i.value = i.a.Value()
+		return true
+	}
+	if i.b.MoveNext() {
+		i.value = i.b.Value()
+		return true
+	}
+	i.value = defaultElementValue
+	return false
 }
 
 // Tee applies the action to every item in the query result
@@ -268,7 +296,7 @@ func (q *Q) Shuffle() *Q {
 		if shuffleDone {
 			// just return
 			return func() (interface{}, bool) {
-				return nil, false
+				return defaultElementValue, false
 			}
 		}
 
@@ -281,7 +309,7 @@ func (q *Q) Shuffle() *Q {
 		return func() (interface{}, bool) {
 
 			if shuffleDone {
-				return nil, false
+				return defaultElementValue, false
 			}
 
 			// get the value from the buffer
@@ -306,7 +334,7 @@ func (q *Q) Shuffle() *Q {
 
 			// clear the last value's location to help the
 			// garbage collector and then shorten the buffer
-			buf[lastIndex] = nil
+			buf[lastIndex] = defaultElementValue
 			buf = buf[:lastIndex]
 
 			shuffleDone = len(buf) == 0

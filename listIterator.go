@@ -9,7 +9,7 @@ type listIterator struct {
 
 func (i *listIterator) MoveNext() bool {
 	if i.version != i.l.version {
-		i.value = nil
+		i.value = defaultElementValue
 		panic("Concurrent modification detected")
 	}
 
@@ -19,7 +19,7 @@ func (i *listIterator) MoveNext() bool {
 		return true
 	}
 
-	i.value = nil
+	i.value = defaultElementValue
 	return false
 }
 

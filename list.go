@@ -6,7 +6,7 @@ type list struct {
 }
 
 func (l *list) Iterator() Iterator {
-	return &listIterator{l, l.version, -1, nil}
+	return &listIterator{l, l.version, -1, defaultElementValue}
 }
 
 func (l *list) Add(item interface{}) bool {
@@ -29,7 +29,7 @@ func (l *list) Clear() {
 	}
 	if l.Len() <= 1024 {
 		for i := 0; i < len(l.items); i++ {
-			l.items[i] = nil
+			l.items[i] = defaultElementValue
 		}
 		l.items = l.items[:0]
 	} else {
@@ -47,7 +47,7 @@ func (l *list) InsertAt(index int, item interface{}) bool {
 		return l.Add(item)
 	}
 
-	l.items = append(l.items, nil)
+	l.items = append(l.items, defaultElementValue)
 	copy(l.items[index+1:], l.items[index:])
 	l.items[index] = item
 	l.version++
@@ -64,7 +64,7 @@ func (l *list) Last() (interface{}, bool) {
 
 func (l *list) Get(index int) (interface{}, bool) {
 	if 0 > index || index >= len(l.items) {
-		return nil, false
+		return defaultElementValue, false
 	}
 	return l.items[index], true
 }
@@ -115,7 +115,7 @@ func (l *list) DeleteAt(index int) bool {
 	if index != last {
 		copy(l.items[index:], l.items[index+1:])
 	}
-	l.items[last] = nil
+	l.items[last] = defaultElementValue
 	l.items = l.items[:last]
 	l.version++
 	return true

@@ -96,6 +96,13 @@ func assert(t *testing.T, expected, actual interface{}, msg string) {
 	}
 }
 
+func assertb(t *testing.T, expected, actual bool, msg string) {
+	if expected != actual {
+		_, file, line, _ := runtime.Caller(1)
+		t.Errorf("\n%v:%v: Expected %v, got %v for %v.", path.Base(file), line, expected, actual, msg)
+	}
+}
+
 func assertContains(t *testing.T, l ReadOnlyBag, item interface{}, expected bool) {
 	result := l.Contains(item)
 	if expected != result {

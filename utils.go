@@ -25,7 +25,7 @@ type nilIterator struct{}
 
 func (x *nilIterator) MoveNext() bool { return false }
 
-func (x *nilIterator) Value() interface{} { return nil }
+func (x *nilIterator) Value() interface{} { return defaultElementValue }
 
 // Sort sorts the list with the given Lesser function
 func Sort(l List, lesser Lesser) {
@@ -158,7 +158,7 @@ func Repeat(count int, item interface{}) Iterable {
 		x := 0
 		return func() (interface{}, bool) {
 			if x == count {
-				return nil, false
+				return defaultElementValue, false
 			}
 			x++
 			return item, true
@@ -181,7 +181,7 @@ func Range(start, end int) Iterable {
 		y := end
 		return func() (interface{}, bool) {
 			if x == y {
-				return nil, false
+				return defaultElementValue, false
 			}
 			x = x + inc
 			return x, true
@@ -192,13 +192,13 @@ func Range(start, end int) Iterable {
 func max(a, b int) int {
 	if a > b {
 		return a
-	} 
-   return b
+	}
+	return b
 }
 
 func min(a, b int) int {
 	if a < b {
 		return a
 	}
-   return b
+	return b
 }

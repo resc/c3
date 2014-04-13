@@ -11,7 +11,7 @@ func (i *selectIterator) MoveNext() bool {
 		i.value = i.selector(i.items.Value())
 		return true
 	}
-	i.value = nil
+	i.value = defaultElementValue
 	return false
 }
 

@@ -28,7 +28,7 @@ func (i *queueIterator) MoveNext() bool {
 
 func (i *queueIterator) Value() interface{} {
 	if i.e == nil {
-		return nil
+		return defaultElementValue
 	}
 	return i.e.item
 }

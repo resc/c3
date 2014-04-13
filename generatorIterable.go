@@ -5,5 +5,5 @@ type generatorIterable struct {
 }
 
 func (i *generatorIterable) Iterator() Iterator {
-	return &generateIterator{i.g(), nil}
+	return &generateIterator{i.g(), defaultElementValue}
 }

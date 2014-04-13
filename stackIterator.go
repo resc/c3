@@ -9,7 +9,7 @@ type stackIterator struct {
 
 func (si *stackIterator) MoveNext() bool {
 	if si.version != si.l.version {
-		si.value = nil
+		si.value = defaultElementValue
 		panic("Concurrent modification detected")
 	}
 
@@ -19,7 +19,7 @@ func (si *stackIterator) MoveNext() bool {
 		si.value = si.l.items[si.index]
 		return true
 	}
-	si.value = nil
+	si.value = defaultElementValue
 	return false
 }
 

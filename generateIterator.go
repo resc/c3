@@ -12,7 +12,7 @@ func (i *generateIterator) MoveNext() bool {
 		return true
 	}
 
-	i.value = nil
+	i.value = defaultElementValue
 	return false
 }
 

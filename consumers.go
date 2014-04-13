@@ -25,5 +25,5 @@ func (i *consumer) Value() interface{} {
 	if i.hasvalue {
 		return i.value
 	}
-	return nil
+	return defaultElementValue
 }

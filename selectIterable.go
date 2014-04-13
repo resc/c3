@@ -6,5 +6,5 @@ type selectIterable struct {
 }
 
 func (i *selectIterable) Iterator() Iterator {
-	return &selectIterator{i.items.Iterator(), i.selector, nil}
+	return &selectIterator{i.items.Iterator(), i.selector, defaultElementValue}
 }

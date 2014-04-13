@@ -90,7 +90,7 @@ func MakeIterable(g Generator) Iterable {
 
 // MakeIterator converts the Generate function into an Iterator.
 func MakeIterator(g Generate) Iterator {
-	return &generateIterator{g, nil}
+	return &generateIterator{g, defaultElementValue}
 }
 
 // MakeGenerator converts the Iterable into a Generator function.

@@ -11,7 +11,7 @@ func (sc *stackConsumer) MoveNext() bool {
 		sc.value = value
 		return true
 	}
-	sc.value = nil
+	sc.value = defaultElementValue
 	return false
 }
 
