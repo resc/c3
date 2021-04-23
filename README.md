@@ -1,3 +1,6 @@
+This repository has been archived
+=================================
+
 [![Build Status](https://travis-ci.org/ReSc/c3.png?branch=master)](https://travis-ci.org/ReSc/c3)
 c3
 ==
